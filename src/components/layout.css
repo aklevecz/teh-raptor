@@ -1,8 +1,17 @@
+@font-face {
+  font-family: "Stolzl Display";
+  src: url("../fonts/Stolzl Display.otf") format("opentype");
+}
+@font-face {
+  font-family: "Stolzl Display";
+  font-weight: bold;
+  src: url("../fonts/Stolzl Display Bold.otf") format("opentype");
+}
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
-  background:antiquewhite;
+  background: #1f1f1f;
 }
 body {
   margin: 0;
