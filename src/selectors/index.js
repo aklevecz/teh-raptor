@@ -1,0 +1,1 @@
+export const sbid = id => document.querySelector(`#${id}`)
