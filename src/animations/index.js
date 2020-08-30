@@ -24,26 +24,69 @@ export const animateAttribute = (ele, att, duration, change) => {
   })
 }
 
-export const animateLine = lineEl => {
+export const animateLine = (lineEl, step = 1) => {
   const startX = parseFloat(lineEl.getAttribute("x1"))
   const endX = parseFloat(lineEl.getAttribute("x2"))
   lineEl.setAttribute("x2", startX)
   let stop = false
   async function start() {
     const randomInterval = () => 2000 * Math.random()
-    await animateAttribute(lineEl, "x2", randomInterval(), endX - startX)
-    await animateAttribute(lineEl, "x1", randomInterval(), endX - startX)
-    await animateAttribute(lineEl, "y2", randomInterval(), -200)
-    await animateAttribute(lineEl, "y1", randomInterval(), -200)
-    await animateAttribute(lineEl, "x1", randomInterval(), (endX - startX) * -1)
-    await animateAttribute(lineEl, "x2", randomInterval(), (endX - startX) * -1)
-    await animateAttribute(lineEl, "y2", randomInterval(), 200)
-    await animateAttribute(lineEl, "y1", randomInterval(), 200)
+    if (step === 1) {
+      await animateAttribute(lineEl, "x2", randomInterval(), endX - startX)
+    } else if (step === 2) {
+      await animateAttribute(lineEl, "x1", randomInterval(), endX - startX)
+    } else if (step === 3) {
+      await animateAttribute(lineEl, "y2", randomInterval(), -200)
+    } else if (step === 4) {
+      await animateAttribute(lineEl, "y1", randomInterval(), -200)
+    } else if (step === 5) {
+      await animateAttribute(
+        lineEl,
+        "x1",
+        randomInterval(),
+        (endX - startX) * -1
+      )
+    } else if (step === 6) {
+      await animateAttribute(
+        lineEl,
+        "x2",
+        randomInterval(),
+        (endX - startX) * -1
+      )
+    } else if (step === 7) {
+      await animateAttribute(lineEl, "y2", randomInterval(), 200)
+    } else {
+      await animateAttribute(lineEl, "y1", randomInterval(), 200)
+      step = 0
+    }
+    step++
     if (!stop) start()
   }
   start()
   return () => {
     stop = true
-    console.log("stawp")
   }
 }
+
+// export const animateLine = lineEl => {
+//   const startX = parseFloat(lineEl.getAttribute("x1"))
+//   const endX = parseFloat(lineEl.getAttribute("x2"))
+//   lineEl.setAttribute("x2", startX)
+//   let stop = false
+//   async function start() {
+//     const randomInterval = () => 2000 * Math.random()
+//     await animateAttribute(lineEl, "x2", randomInterval(), endX - startX)
+//     await animateAttribute(lineEl, "x1", randomInterval(), endX - startX)
+//     await animateAttribute(lineEl, "y2", randomInterval(), -200)
+//     await animateAttribute(lineEl, "y1", randomInterval(), -200)
+//     await animateAttribute(lineEl, "x1", randomInterval(), (endX - startX) * -1)
+//     await animateAttribute(lineEl, "x2", randomInterval(), (endX - startX) * -1)
+//     await animateAttribute(lineEl, "y2", randomInterval(), 200)
+//     await animateAttribute(lineEl, "y1", randomInterval(), 200)
+//     if (!stop) start()
+//   }
+//   start()
+//   return () => {
+//     stop = true
+//   }
+// }

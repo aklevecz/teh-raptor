@@ -1,51 +1,44 @@
 import React from "react"
-import { Link } from "gatsby"
 import Layout from "../components/layout"
-import Image from "../components/image"
 import SEO from "../components/seo"
 import SVG from "react-inlinesvg"
-import {
-  c1,
-  c2,
-  c3,
-  c4,
-  c5,
-  c6,
-  c7,
-  enterButton,
-  enterLine,
-} from "../selectors/enter"
-import { easeLinear, animateAttribute, animateLine } from "../animations"
-import { radius } from "../selectors/attributes"
-import styled, { css, keyframes } from "styled-components"
+import { enterButton, enterLine, enterLine2 } from "../selectors/enter"
+import { animateLine } from "../animations"
+import styled from "styled-components"
 import * as Tone from "tone"
 import "../animations/animations.css"
+import { navigate } from "gatsby"
 
-function createCSS() {
-  let styles = ``
-
-  for (let i = 1; i < 8; i += 1) {
-    styles += `
-       #c${i} {
-         animation: pulse 5000ms infinite alternate,fill-pulse 5000ms infinite alternate;
-         animation-delay: ${i - 1.5}s;
-         fill: white;
-         stroke: none;
-       }
-     `
-  }
-
-  return css`
-    ${styles}
-  `
-}
 const AnimWrap = styled.div`
   svg {
     overflow: visible;
   }
-  ${createCSS()};
 `
+export const delay = t => {
+  return new Promise(resolve => {
+    setTimeout(resolve, t)
+  })
+}
+
 const IndexPage = () => {
+  const tearDown = () => {
+    return new Promise(resolve => {
+      document.querySelectorAll("circle").forEach(async (el, i) => {
+        const cEl = document.querySelector(`#${el.id}`)
+        const fadeOutTime = 3000
+        cEl.style.animation = ""
+        enterButton().style.transition = "transform 4000ms"
+        await delay(200)
+        enterButton().style.transform = "scale(0)"
+        cEl.style.transition = `transform ${fadeOutTime}ms, opacity ${fadeOutTime}ms`
+        cEl.style.transform = "scale(7)"
+        await delay(fadeOutTime)
+        cEl.style.opacity = 0
+        resolve()
+      })
+    })
+  }
+
   const setup = () => {
     enterButton().style.animation = "red-pulse 5000ms infinite alternate"
     enterButton().querySelector("text").style.strokeWidth = "3px"
@@ -54,9 +47,23 @@ const IndexPage = () => {
 
     enterLine().style.stroke = "white"
     const stop = animateLine(enterLine())
-    enterButton().onclick = stop
 
-    document.querySelectorAll("circle.cls-1").forEach((el, i) => {
+    enterLine2().style.stroke = "white"
+    const stop2 = animateLine(enterLine2(), 7)
+
+    enterButton().onclick = () => {
+      stop()
+      stop2()
+      tearDown().then(() => navigate("/page-2"))
+    }
+
+    document.querySelectorAll("circle").forEach((el, i) => {
+      el.style.animation =
+        "pulse 5000ms infinite alternate,fill-pulse 5000ms infinite alternate"
+      el.style.animationDelay = `${i - 1.5}s`
+      el.style.fill = "white"
+      el.style.stroke = "none"
+
       const cx = el.getAttribute("cx")
       const cy = el.getAttribute("cy")
       el.style.transformOrigin = `${cx}px ${cy}px`
